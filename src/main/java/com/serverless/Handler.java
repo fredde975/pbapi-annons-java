@@ -6,6 +6,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.serverless.model.Annons;
+import com.serverless.model.Arbetsplats;
+import com.serverless.model.VardeNamn;
 import org.apache.log4j.Logger;
 
 import com.amazonaws.services.lambda.runtime.Context;
