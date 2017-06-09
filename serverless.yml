@@ -24,6 +24,8 @@ provider:
 # you can overwrite defaults here
   stage: dev
   region: us-east-1
+  environment:
+    PBAPI_URL: https://www.arbetsformedlingen.se/rest/pbapi/
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -43,19 +45,17 @@ provider:
 
 # you can define service wide environment variables here
 #  environment:
-#    variable1: value1
+#    PBAPI_URL: https://www.arbetsformedlingen.se/rest/pbapi/
 
 # you can add packaging information here
 package:
   artifact: target/hello-dev.jar
 
 functions:
-  hello:
-    handler: com.serverless.Handler
-
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
+  pbapi-annonser:
+    handler: com.serverless.AnnonsHandler
+    environment:
+      PBAPI_VERSION: af/v1/version
     events:
       - http:
           path: pbapi/annons
@@ -78,9 +78,13 @@ functions:
 #                - pending
 #      - cloudwatchLog: '/aws/lambda/hello'
 
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
+
+  pbapi-version:
+    handler: com.serverless.VersionHandler
+    events:
+      - http:
+          path: pbapi/version
+          method: get
 
 # you can add CloudFormation resource templates here
 #resources:
