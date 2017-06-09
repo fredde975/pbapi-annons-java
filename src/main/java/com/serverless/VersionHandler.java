@@ -29,7 +29,7 @@ public class VersionHandler implements RequestHandler<Map<String, Object>, ApiGa
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         Response response = getResponse(COMPLETE_URL);
-        com.serverless.Response responseBody = new com.serverless.Response("URL to getting version from pbapi = " + COMPLETE_URL + "\n" + response.readEntity(String.class), input);
+        com.serverless.Response responseBody = new com.serverless.Response(response.readEntity(String.class), input);
         ApiGatewayResponse apiGatewayResponse = ApiGatewayResponse.builder()
                 .setStatusCode(200)
                 .setObjectBody(responseBody)
@@ -47,10 +47,11 @@ public class VersionHandler implements RequestHandler<Map<String, Object>, ApiGa
                     .request()
                     .get();
         } catch (ProcessingException processing) {
-            LOG.error(String.format("Call to ledigtarbete with urlPath: '%s' took to long and was aborted. Thrown exception: '%s'", url, processing.getCause()));
-            return null;
+            String message = String.format("Call to ledigtarbete with urlPath: '%s' took to long and was aborted. Thrown exception: '%s'", url, processing.getCause());
+            LOG.error(message);
         } catch (Exception exception) {
-            LOG.error(String.format("An exception occurred while calling ledigtarbete rest service with URL'. Thrown exception: '%s'", url, exception));
+            String message = String.format("An exception occurred while calling ledigtarbete rest service with URL'. Thrown exception: '%s'", url, exception);
+            LOG.error(message);
             //throw new TjanstOtillgangligException(String.format("Failed to connect to arbetsgivare with URL: '%s'. Thrown Exception: '%s'", url, exception));
         }
 
