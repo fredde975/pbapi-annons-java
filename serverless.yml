@@ -48,6 +48,14 @@ package:
   artifact: target/hello-dev.jar
 
 functions:
+  pbapi-matchning:
+    handler: com.serverless.MatchningHandler
+    environment:
+      PBAPI_MATCHNING: af/v1/matchning/matchandeRekryteringsbehov
+    events:
+      - http:
+          path: pbapi/matchning
+          method: post
   pbapi-annonser:
     handler: com.serverless.AnnonsHandler
     environment:

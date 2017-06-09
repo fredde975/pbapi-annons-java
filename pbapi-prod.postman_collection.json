@@ -1,0 +1,208 @@
+{
+	"variables": [],
+	"info": {
+		"name": "pbapi-prod",
+		"_postman_id": "452d73c3-600a-9f08-bbce-cc616c8d1894",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Kriterier",
+			"description": "",
+			"item": [
+				{
+					"name": "Kriterier",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "https://www.arbetsformedlingen.se/rest/pbapi/af/v1/matchning/matchningskriterier?typer=lan&namnfilter=uppsala",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Filter away lan=sverige VERA-217",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Empty body after filtering away\"] = JSON.parse(responseBody).length === 0;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://pbapi.arbetsformedlingen.se/pbapi/rest/af/v1/matchning/matchningskriterier?typer=lan&namnfilter=sverige",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "lan=stockholm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Empty body after filtering away\"] = JSON.parse(responseBody).length === 0;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://pbapi.arbetsformedlingen.se/pbapi/rest/af/v1/matchning/matchningskriterier?typer=lan&namnfilter=sverige",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rekryteringsbehov",
+			"description": "",
+			"item": [
+				{
+					"name": "Rekryteringsbehov",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "https://www.arbetsformedlingen.se/rest/pbapi/af/v1/matchning/matchandeRekryteringsbehov",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"matchningsprofil\": {\r\n    \"profilkriterier\": [\r\n      {\r\n        \"namn\": \"Göteborg\",\r\n        \"varde\": \"1480\",\r\n        \"typ\": \"KOMMUN\"\r\n      }\r\n     \r\n    ]\r\n  },\r\n  \"maxAntal\": 10,\r\n  \"startrad\": 0\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rekryteringsbehov/{id}",
+			"description": "",
+			"item": [
+				{
+					"name": "Rekryteringsbehov with id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "https://www.arbetsformedlingen.se/rest/pbapi/af/v1/matchning/matchandeRekryteringsbehov/32977",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"profilkriterier\": [\r\n        {\r\n            \"namn\": \"Advokat\",\r\n            \"varde\": \"6032\",\r\n            \"typ\": \"YRKESROLL\"\r\n        },\r\n        {\r\n            \"namn\": \"Stockholm\",\r\n            \"varde\": \"0180\",\r\n            \"typ\": \"KOMMUN\"\r\n        },\r\n        {\r\n            \"typ\": \"YRKE\",\r\n            \"namn\": \"Advokat\",\r\n            \"varde\": \"6032\",\r\n            \"egenskaper\":[{\r\n                \"typ\": \"YRKE_ERFARENHET\",\r\n                \"varde\": \"3\"\r\n             }]\r\n        }\r\n    ]\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "urval",
+			"description": "",
+			"item": [
+				{
+					"name": "urval",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Response time is less than 400ms\"] = responseTime < 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "https://www.arbetsformedlingen.se/rest/pbapi/af/v1/matchning/matchandeRekryteringsbehov/urval",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"urvalsRekryteringsbehov\": [\r\n    {\r\n      \"rekryteringsbehovId\": \"2589072\"\r\n    },\r\n    {\r\n      \"rekryteringsbehovId\": \"2589268\"\r\n    }\r\n  ],\r\n  \"matchningsprofil\": {\r\n    \"profilkriterier\": [\r\n    {\r\n      \"namn\": \"Helpdesktekniker / Supporttekniker\",\r\n      \"varde\": \"7020\",\r\n      \"typ\": \"YRKESROLL\"\r\n    }\r\n   ]\r\n  }\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
