@@ -8,19 +8,28 @@ import com.serverless.model.Annons;
 import com.serverless.model.Arbetsplats;
 import com.serverless.model.VardeNamn;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
+import javax.ws.rs.core.Response;
+
+import javax.ws.rs.ProcessingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class VersionHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
     private static final Logger LOG = Logger.getLogger(VersionHandler.class);
+    private String PBAPI_URL = System.getenv("PBAPI_URL");
+    private String PBAPI_VERSION = System.getenv("PBAPI_VERSION");
+    private String COMPLETE_URL = PBAPI_URL + PBAPI_VERSION;
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        LOG.info("received input to versionHandler: " + input);
-        Response responseBody = new Response("The version is xxx", input);
+        Response response = getResponse(COMPLETE_URL);
+        com.serverless.Response responseBody = new com.serverless.Response("URL to getting version from pbapi = " + COMPLETE_URL + "\n" + response.readEntity(String.class), input);
         ApiGatewayResponse apiGatewayResponse = ApiGatewayResponse.builder()
                 .setStatusCode(200)
                 .setObjectBody(responseBody)
@@ -28,5 +37,30 @@ public class VersionHandler implements RequestHandler<Map<String, Object>, ApiGa
                 .build();
 
         return apiGatewayResponse;
+    }
+
+    private Response getResponse(String url) {
+        Response response = null;
+        try {
+            response = getClient()
+                    .target(url)
+                    .request()
+                    .get();
+        } catch (ProcessingException processing) {
+            LOG.error(String.format("Call to ledigtarbete with urlPath: '%s' took to long and was aborted. Thrown exception: '%s'", url, processing.getCause()));
+            return null;
+        } catch (Exception exception) {
+            LOG.error(String.format("An exception occurred while calling ledigtarbete rest service with URL'. Thrown exception: '%s'", url, exception));
+            //throw new TjanstOtillgangligException(String.format("Failed to connect to arbetsgivare with URL: '%s'. Thrown Exception: '%s'", url, exception));
+        }
+
+        return response;
+    }
+
+    private ResteasyClient getClient() {
+        return new ResteasyClientBuilder()
+                .establishConnectionTimeout(1000, TimeUnit.MILLISECONDS)
+                .socketTimeout(1000, TimeUnit.MILLISECONDS)
+                .build();
     }
 }

@@ -43,10 +43,6 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    PBAPI_URL: https://www.arbetsformedlingen.se/rest/pbapi/
-
 # you can add packaging information here
 package:
   artifact: target/hello-dev.jar
@@ -81,6 +77,8 @@ functions:
 
   pbapi-version:
     handler: com.serverless.VersionHandler
+    environment:
+          PBAPI_VERSION: af/v1/version
     events:
       - http:
           path: pbapi/version
